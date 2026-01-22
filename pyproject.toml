@@ -1,0 +1,31 @@
+[project]
+name = "endfield-ilp"
+version = "0.1.0"
+description = "ILP solver for Arknights: Endfield"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "scipy>=1.15.3",
+    "streamlit>=1.53.1",
+]
+
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ['src']
+include = ['akef*', 'akeflp*']
+
+[tool.uv.sources]
+endfield-ilp = { workspace = true }
+
+[tool.flake8]
+per-file-ignores = [
+    "__init__.py:F401",
+]
+
+[dependency-groups]
+dev = [
+    "endfield-ilp",
+]
