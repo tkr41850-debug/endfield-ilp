@@ -4,12 +4,16 @@ from typing import Final, List, Tuple
 import yaml
 
 from akef.item import Item, ResourceCost
+from akef.power_source import PowerSource
 
 items = {}
 with open(Path(__file__).resolve().parent / "items.yaml", "r") as file:
     _data: Final[dict] = yaml.safe_load(file.read())
     actions: Final[dict[str, ResourceCost]] = {
         k: ResourceCost.from_dict(v) for k, v in _data["actions"].items()
+    }
+    power_sources: Final[dict[str, PowerSource]] = {
+        k: PowerSource.from_dict(v) for k, v in _data["power"].items()
     }
     raw_resources: Final[set[str]] = set(_data["raw_resources"])
     _items: Final[dict] = _data["items"]

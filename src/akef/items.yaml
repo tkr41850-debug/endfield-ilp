@@ -4,13 +4,17 @@ raw_resources:
   - amethyst_ore
   - ferrium_ore
 power:
-  - originium_ore: 50
+  originium_ore:
+    power: 50
     seconds: 8
-  - lc_valley_battery: 220
+  lc_valley_battery:
+    power: 220
     seconds: 40
-  - sc_valley_battery: 420
+  sc_valley_battery:
+    power: 420
     seconds: 40
-  - hc_valley_battery: 1100
+  hc_valley_battery:
+    power: 1100
     seconds: 40
 actions:
   refine:

@@ -34,3 +34,4 @@ class Item:
         self.action: Final = action
         self.action_overhead: Final = overhead
         self.value: Final = value
+        self.output_rate: Final = self.base_rate * self.output
