@@ -2,12 +2,13 @@ import math
 
 import streamlit as st
 
-from akef.items import Item, items, raw_resources
+from akef.items import Item, ResourceCost, items, power_sources, raw_resources
+from akeflp.solver import solve
 
 
 def render(item: Item, rate: float, depth: int = 0) -> None:
     totcost = item.cost * math.ceil(rate / item.base_rate)
-    rateinfo = f"{item.name} @ {rate}/min costs {totcost}"
+    rateinfo = f"{item.name} @ {rate}/min $\\xleftarrow{{\\text{{costs}}}}$ {totcost}"
     if not item.inputs:
         st.write(rateinfo)
         return
@@ -19,6 +20,64 @@ def render(item: Item, rate: float, depth: int = 0) -> None:
 
 
 def main() -> None:
+    st.write("# Optimize")
+    constraints = ResourceCost.from_dict(
+        {
+            "originium_ore": st.number_input("Originium ore/min", step=1, min_value=0),
+            "amethyst_ore": st.number_input("Amethyst ore/min", step=1, min_value=0),
+            "ferrium_ore": st.number_input("Ferrium ore/min", step=1, min_value=0),
+            "power": st.number_input("PAC Baseline power", step=1, min_value=200)
+            - (
+                baseline := st.number_input(
+                    "Baseline power usage (Tower, relay, etc.)",
+                    step=1,
+                    min_value=0,
+                    value=200,
+                )
+            ),
+        }
+    )
+    with st.expander("Objective function"):
+        vals = {
+            k: st.number_input(k, step=1, value=v.value)
+            for k, v in items.items()
+            if k not in raw_resources
+        }
+    if st.button("Calculate"):
+        # st.write(constraints.__repr__(), constraints.val)
+        # st.write(vals)
+        try:
+            res = solve(constraints, vals)
+            st.write(f"### Value rate: :green[**{res.value_rate}**]/min")
+            with st.expander(
+                f"### Power :yellow[**{res.power_total + baseline}**]W "
+                + f" for load of :yellow[**{res.power_required + baseline}**]W "
+                + f"({res.power_required}req + {baseline}base)",
+            ):
+                for k, vp in res.power.items():
+                    st.write(
+                        f"**{k}**: {vp.x} at a time",
+                        f"(:red[{vp.x * power_sources[k].consumption_rate}]/min),",
+                        (
+                            f"generating :yellow[**{vp.power}**]W in total. "
+                            + f"Opportunity cost of :red[**{vp.opportunity_cost}**] "
+                            + "val/min."
+                            if vp.x
+                            else ""
+                        ),
+                    )
+            with st.expander("### Produce these items"):
+                for k, vt in res.produce.items():
+                    item = items[k]
+                    st.write(
+                        f"**{k}** @ {vt.x * item.output_rate}/min",
+                        f"generating :green[**{vt.rate}**] value/min",
+                    )
+                    render(item, vt.x * item.output_rate)
+        except TypeError:
+            st.error("No solution found?? :/ (it should say something...)")
+
+    st.write("# Resources")
     for item in items.values():
         if item.name in raw_resources:
             continue
