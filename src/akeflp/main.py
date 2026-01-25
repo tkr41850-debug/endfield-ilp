@@ -20,6 +20,22 @@ def render(item: Item, rate: float, depth: int = 0) -> None:
 
 
 def main() -> None:
+    st.title("Endfield ILP Optimizer")
+    st.write(
+        "Put your ore income and baseline power needs in the box. The program "
+        "will calculate what facilities you can have and a valid way of "
+        "powering everything such that the **objective** is maximized."
+    )
+    st.write(
+        "**Objective** is defined as giving every item a score and trying "
+        "to maximize the score per hour you can get. The preset setting is "
+        "maximizing the amount Stock Bill you can get, assuming you were able "
+        "to sell everything (unlikely to be true)."
+    )
+    st.write(
+        "If you scroll to the bottom, you can see how power and ore upkeep of"
+        "each facility is calculated."
+    )
     st.write("# Optimize")
     constraints = ResourceCost.from_dict(
         {
