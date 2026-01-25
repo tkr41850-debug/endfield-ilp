@@ -21,7 +21,9 @@ class Item:
     ) -> None:
         self.name: Final = name
         self.base_rate: Final = 60 / seconds_to_craft
-        self.cost: Final = sum(
+        """how many completions per minute"""
+
+        self.cost: Final[ResourceCost] = sum(
             [
                 item.cost
                 * math.ceil(w * self.base_rate / (item.base_rate * item.output))
@@ -35,3 +37,4 @@ class Item:
         self.action_overhead: Final = overhead
         self.value: Final = value
         self.output_rate: Final = self.base_rate * self.output
+        """how much one facility can output per minute (base_rate * output)"""

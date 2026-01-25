@@ -5,7 +5,7 @@ Raw resources
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Final, TypeAlias
+from typing import Final, Optional, TypeAlias
 
 import numpy as np
 import yaml
@@ -20,12 +20,12 @@ T: TypeAlias = np.ndarray
 
 
 class ResourceCost:
-    def __init__(self, val: T = np.zeros((N,), np.uint16)) -> None:
-        self.val: Final = val
+    def __init__(self, val: Optional[T] = None) -> None:
+        self.val: Final[T] = val if val is not None else np.zeros((N,), np.int16)
 
     @classmethod
     def from_dict(cls, d: dict) -> ResourceCost:
-        val = np.zeros((N,), np.uint16)
+        val = np.zeros((N,), np.int16)
         for i, k in enumerate(raw_resources):
             val[i] = d.get(k, 0)
         return ResourceCost(val)
@@ -34,7 +34,7 @@ class ResourceCost:
         return ", ".join(
             [
                 (
-                    f"{raw_resources[i]} @ :red[**{self.val[i]}**]/min"
+                    f":blue[**{self.val[i]}**] {raw_resources[i]}/min"
                     if raw_resources[i] != "power"
                     else f":yellow[**{self.val[i]}**]W"
                 )

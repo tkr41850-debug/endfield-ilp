@@ -7,6 +7,9 @@ class PowerSource:
     def __init__(self, duration_seconds: int, power_output: int) -> None:
         self.duration_seconds: Final = duration_seconds
         self.power_output: Final = power_output
+        self.consumption_rate: Final = 60 / duration_seconds
+        """how many units of the power source are consumed per minute for each
+        active instance of the power source"""
 
     @classmethod
     def from_dict(cls, d: dict) -> PowerSource:
