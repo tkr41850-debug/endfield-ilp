@@ -115,6 +115,7 @@ items:
   amethyst_bottle:
     mold:
       amethyst_fiber: 2
+    value: 2
   ferrium_bottle:
     mold:
       ferrium: 2
@@ -127,15 +128,18 @@ items:
   amethyst_part:
     fit:
       amethyst_fiber: 1
+    value: 1
   ferrium_part:
     fit:
       ferrium: 1
+    value: 1
   cryston_part:
     fit:
       cryston_fiber: 1
   steel_part:
     fit:
       steel: 1
+    value: 3
   amethyst_component:
     gear:
       origocrust: 5
@@ -156,16 +160,19 @@ items:
       amethyst_part: 5
       originium_powder: 10
       seconds: 10
+    value: 16
   sc_valley_battery:
     package:
       ferrium_part: 10
       originium_powder: 15
       seconds: 10
+    value: 30
   hc_valley_battery:
     package:
       steel_part: 10
       dense_originium_powder: 15
       seconds: 10
+    value: 70
   buckflower_powder:
     shred:
       anyplant: 1
@@ -176,13 +183,16 @@ items:
       amethyst_bottle: 5
       buckflower_powder: 5
       seconds: 10
+    value: 10
   buck_capsule_b:
     fill:
       ferrium_bottle: 10
       buckflower_powder: 10
       seconds: 10
+    value: 27
   buck_capsule_a:
     fill:
       steel_bottle: 10
       ground_buckflower_powder: 10
       seconds: 10
+    value: 70

@@ -17,6 +17,7 @@ class Item:
         inputs: Sequence[Tuple[int, Item]],
         action: str,
         output: int = 1,
+        value: int = 1,
     ) -> None:
         self.name: Final = name
         self.base_rate: Final = 60 / seconds_to_craft
@@ -32,3 +33,4 @@ class Item:
         self.inputs: Final = inputs
         self.action: Final = action
         self.action_overhead: Final = overhead
+        self.value: Final = value

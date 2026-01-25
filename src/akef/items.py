@@ -23,9 +23,10 @@ with open(Path(__file__).resolve().parent / "items.yaml", "r") as file:
         if k in raw_resources or k in items:
             return
         u = _items[k]
-        action: Final[str] = list(u.keys())[0]
+        action: Final[str] = list(k for k in u.keys() if k != "value")[0]
         recipe: Final[dict] = u[action]
 
+        value = u.get("value", 0)
         seconds = recipe.get("seconds", 2)
         quantity = recipe.get("quantity", 1)
         prereqs: List[Tuple[str, int]] = []
@@ -41,6 +42,7 @@ with open(Path(__file__).resolve().parent / "items.yaml", "r") as file:
             overhead=actions[action],
             output=quantity,
             inputs=[(amt, items[p]) for p, amt in prereqs],
+            value=value,
         )
 
     for name in _items:
