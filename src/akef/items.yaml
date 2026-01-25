@@ -1,0 +1,188 @@
+raw_resources:
+  - power
+  - originium_ore
+  - amethyst_ore
+  - ferrium_ore
+power:
+  - originium_ore: 50
+    seconds: 8
+  - lc_valley_battery: 220
+    seconds: 40
+  - sc_valley_battery: 420
+    seconds: 40
+  - hc_valley_battery: 1100
+    seconds: 40
+actions:
+  refine:
+    power: 5
+  shred:
+    power: 5
+  fit:
+    power: 20
+  mold:
+    power: 10
+  # plant:
+  #   power: 20
+  # seed:
+  #   power: 10
+  gear:
+    power: 10
+  fill:
+    power: 20
+  package:
+    power: 20
+  grind:
+    power: 50
+  plantloop:
+    power: 50
+items:
+  # itemname:
+  #   method:
+  #    resource_name: resource_amount
+  #    seconds: (defaults to 2)
+  #    quantity: (defaults to 1)
+  anyplant:
+    plantloop: {}
+  carbon:
+    refine:
+      anyplant: 1
+      seconds: 1
+  origocrust:
+    refine:
+      originium_ore: 1
+  amethyst_fiber:
+    refine:
+      amethyst_ore: 1
+  ferrium:
+    refine:
+      ferrium_ore: 1
+  stabilized_carbon:
+    refine:
+      carbon: 1
+  packed_origocrust:
+    refine:
+      dense_origocrust_powder: 1
+  cryston_fiber:
+    refine:
+      cryston_powder: 1
+  steel:
+    refine:
+      dense_ferrium_powder: 1
+  carbon_powder:
+    shred:
+      carbon: 1
+      quantity: 2
+  originium_powder:
+    shred:
+      originium_ore: 1
+  origocrust_powder:
+    shred:
+      origocrust: 1
+  amethyst_powder:
+    shred:
+      amethyst_ore: 1
+  ferrium_powder:
+    shred:
+      ferrium_ore: 1
+  sandleaf_powder:
+    shred:
+      anyplant: 1
+      quantity: 3
+  ground_buckflower_powder:
+    grind:
+      buckflower_powder: 2
+      sandleaf_powder: 1
+  dense_carbon_powder:
+    grind:
+      carbon_powder: 2
+      sandleaf_powder: 1
+  dense_originium_powder:
+    grind:
+      originium_powder: 2
+      sandleaf_powder: 1
+  dense_origocrust_powder:
+    grind:
+      origocrust_powder: 2
+      sandleaf_powder: 1
+  cryston_powder:
+    grind:
+      amethyst_powder: 2
+      sandleaf_powder: 1
+  dense_ferrium_powder:
+    grind:
+      ferrium_powder: 2
+      sandleaf_powder: 1
+  amethyst_bottle:
+    mold:
+      amethyst_fiber: 2
+  ferrium_bottle:
+    mold:
+      ferrium: 2
+  cryston_bottle:
+    mold:
+      cryston_fiber: 2
+  steel_bottle:
+    mold:
+      steel: 2
+  amethyst_part:
+    fit:
+      amethyst_fiber: 1
+  ferrium_part:
+    fit:
+      ferrium: 1
+  cryston_part:
+    fit:
+      cryston_fiber: 1
+  steel_part:
+    fit:
+      steel: 1
+  amethyst_component:
+    gear:
+      origocrust: 5
+      amethyst_fiber: 5
+      seconds: 10
+  ferrium_component:
+    gear:
+      origocrust: 10
+      ferrium: 10
+      seconds: 10
+  cryston_component:
+    gear:
+      packed_origocrust: 10
+      cryston_fiber: 10
+      seconds: 10
+  lc_valley_battery:
+    package:
+      amethyst_part: 5
+      originium_powder: 10
+      seconds: 10
+  sc_valley_battery:
+    package:
+      ferrium_part: 10
+      originium_powder: 15
+      seconds: 10
+  hc_valley_battery:
+    package:
+      steel_part: 10
+      dense_originium_powder: 15
+      seconds: 10
+  buckflower_powder:
+    shred:
+      anyplant: 1
+      seconds: 2
+      quantity: 2
+  buck_capsule_c:
+    fill:
+      amethyst_bottle: 5
+      buckflower_powder: 5
+      seconds: 10
+  buck_capsule_b:
+    fill:
+      ferrium_bottle: 10
+      buckflower_powder: 10
+      seconds: 10
+  buck_capsule_a:
+    fill:
+      steel_bottle: 10
+      ground_buckflower_powder: 10
+      seconds: 10
