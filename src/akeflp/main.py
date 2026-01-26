@@ -7,22 +7,24 @@ from akeflp.solver import POWER, solve
 
 
 def render(item: Item, rate: float, depth: int = 0) -> None:
-    totcost = item.cost * math.ceil(rate / item.base_rate)
+    instances = math.ceil(rate / item.base_rate)
+    totcost = item.cost * instances
     rateinfo = (
         f"{rate/item.output_rate:.3f}x "
-        f'{(f"![icon]({item.icon})" if item.icon else "")}'
+        f'{(f"![icon]({item.icon})" if item.icon else "") * instances}'
         f"{item.name} @ {rate}/min "
         f"$\\xleftarrow{{\\text{{costs}}}}$ {totcost} "
         + (f"[{item.value}]" if item.value else "")
     )
-    if not item.inputs:
-        st.write(rateinfo)
-        return
+
     with st.expander(rateinfo):
-        st.write(f"to {item.action} costs {item.action_overhead}")
-        for amt, pitem in item.inputs:
-            recipe_rate = rate / item.output
-            render(pitem, amt * recipe_rate, depth + 1)
+        if item.inputs:
+            st.write(f"to {item.action} costs {item.action_overhead}")
+            for amt, pitem in item.inputs:
+                recipe_rate = rate / item.output
+                render(pitem, amt * recipe_rate, depth + 1)
+        else:
+            st.caption("This is a raw resource.")
 
 
 def main() -> None:
