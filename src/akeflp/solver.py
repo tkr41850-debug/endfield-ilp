@@ -1,4 +1,4 @@
-from typing import NamedTuple, Optional, Sequence, Tuple
+from typing import MutableSequence, NamedTuple, Optional, Sequence, Tuple, cast
 
 import numpy as np
 from scipy.optimize import linprog
@@ -37,6 +37,7 @@ class SolveResult(NamedTuple):
 def solve(
     constraints: ResourceCost,
     tasks: dict[str, int],
+    max_rate: int = 8000 // (60 * 24),
     disallowed_taints: list[str] = [],
 ) -> SolveResult:
     # things that you can make
@@ -93,6 +94,16 @@ def solve(
             A.append(Aps_tmp)
             b.append(0)
 
+    # make sure net item output does not exceed max_rate
+    for i, xlabel in enumerate(xlabels):
+        Axs_tmp = [0.0] * (N + K)
+        Axs_tmp[K + i] = items[xlabel].output_rate  # creating it
+        if xlabel in plabels:  # some output might be allocated for power
+            Axs_tmp[plabels.index(xlabel)] = -power_sources[xlabel].consumption_rate
+        if xlabel not in raw_resources:
+            A.append(Axs_tmp)
+            b.append(max_rate)
+
     # make sure general resource usage is no more than constraints <=
     for i, k in enumerate(raw_resources):
         if k == "power":
@@ -106,15 +117,15 @@ def solve(
 
     A_ub = np.asarray(A)
     b_ub = np.asarray(b)
-    bounds: list[Tuple[Optional[int], Optional[int]]] = [
-        (0, None) for _ in range(len(c))
-    ]
+    bounds: Sequence[Tuple[Optional[int], Optional[int]]] = [
+        (0, None) for _ in range(K)
+    ] + [(0, None) for _ in range(N)]
 
     # ban items that have disallowed_taints
     for i, xlabel in enumerate(xlabels):
         for bad in disallowed_taints:
             if bad in items[xlabel].taints:
-                bounds[i + K] = (0, 0)
+                cast(MutableSequence, bounds)[i + K] = (0, 0)
 
     # print(xlabels, plabels)
     # print(A_ub, b_ub)

@@ -45,6 +45,16 @@ def main() -> None:
         "each facility is calculated."
     )
     st.write("# Optimize")
+    depot_size = st.number_input("Depot Size", step=1000, min_value=8000)
+    checkin_interval_days = st.select_slider(
+        "Check-in interval",
+        [1 / 24, 1 / 12, 0.125, 0.25, 0.5, 1, 2, 3, 4, 5, 6, 7],
+        1,
+        lambda x: (f"{x} day" if x >= 1 else f"{round(x * 24)} hour")
+        + f" ({round(depot_size // (60 * 24 * x))}/min)",
+    )
+    max_rate = round(depot_size // (60 * 24 * checkin_interval_days))
+    st.write(f"Max output rate (to fill depot in 24 hours): :blue[**{max_rate}**]/min")
     constraints = ResourceCost.from_dict(
         {
             "originium_ore": st.number_input("Originium ore/min", step=1, min_value=0),
@@ -72,7 +82,12 @@ def main() -> None:
         # st.write(constraints.__repr__(), constraints.val)
         # st.write(vals)
         try:
-            res = solve(constraints, vals, [] if allow_wuling else ["wuling"])
+            res = solve(
+                constraints=constraints,
+                tasks=vals,
+                max_rate=max_rate,
+                disallowed_taints=[] if allow_wuling else ["wuling"],
+            )
             st.write(f"### Value rate: :green[**{res.value_rate}**]/min")
             with st.expander(
                 f"### Power :yellow[**{res.power_total + baseline}**]W "
