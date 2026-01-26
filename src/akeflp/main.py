@@ -64,8 +64,8 @@ def main() -> None:
     allow_wuling = st.selectbox("Planet", ["Valley IV", "Wuling"]) == "Wuling"
     with st.expander("Objective function"):
         vals = {
-            k: st.number_input(k, step=1, value=v.value)
-            for k, v in items.items()
+            k: st.number_input(f"![]({v.icon}) {k}", step=1, value=v.value)
+            for k, v in sorted(items.items(), key=lambda x: x[1].name)
             if k not in raw_resources
         }
     if st.button("Calculate"):
