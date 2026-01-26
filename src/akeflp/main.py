@@ -104,13 +104,15 @@ def main() -> None:
 
     st.write("# Resources")
     items_display = list(items.values())
-    match st.selectbox("Sort by", ["Default", "Power (dec)", "Value (dec)"], index=1):
+    match st.selectbox("Sort by", ["Alphabetical", "Power (dec)", "Value (dec)"]):
         case "Default":
             pass
         case "Power (dec)":
             items_display.sort(key=lambda x: x.cost.val[POWER], reverse=True)
         case "Value (dec)":
             items_display.sort(key=lambda x: x.value, reverse=True)
+        case "Alphabetical":
+            items_display.sort(key=lambda x: x.name)
     for item in items_display:
         if item.name in raw_resources:
             continue
