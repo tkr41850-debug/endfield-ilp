@@ -1,4 +1,4 @@
-from typing import NamedTuple, Sequence
+from typing import NamedTuple, Optional, Sequence, Tuple
 
 import numpy as np
 from scipy.optimize import linprog
@@ -37,6 +37,7 @@ class SolveResult(NamedTuple):
 def solve(
     constraints: ResourceCost,
     tasks: dict[str, int],
+    disallowed_taints: list[str] = [],
 ) -> SolveResult:
     # things that you can make
     xlabels = list(
@@ -105,12 +106,20 @@ def solve(
 
     A_ub = np.asarray(A)
     b_ub = np.asarray(b)
-    # bounds = [(0, None) for _ in range(len(c))]
+    bounds: list[Tuple[Optional[int], Optional[int]]] = [
+        (0, None) for _ in range(len(c))
+    ]
+
+    # ban items that have disallowed_taints
+    for i, xlabel in enumerate(xlabels):
+        for bad in disallowed_taints:
+            if bad in items[xlabel].taints:
+                bounds[i + K] = (0, 0)
 
     # print(xlabels, plabels)
     # print(A_ub, b_ub)
 
-    res = linprog(c, A_ub=A_ub, b_ub=b_ub, integrality=1)
+    res = linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=bounds, integrality=1)
     # print(res)
 
     return SolveResult(

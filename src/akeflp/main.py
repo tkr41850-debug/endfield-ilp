@@ -56,6 +56,7 @@ def main() -> None:
             ),
         }
     )
+    allow_wuling = st.selectbox("Planet", ["Valley IV", "Wuling"]) == "Wuling"
     with st.expander("Objective function"):
         vals = {
             k: st.number_input(k, step=1, value=v.value)
@@ -66,7 +67,7 @@ def main() -> None:
         # st.write(constraints.__repr__(), constraints.val)
         # st.write(vals)
         try:
-            res = solve(constraints, vals)
+            res = solve(constraints, vals, [] if allow_wuling else ["wuling"])
             st.write(f"### Value rate: :green[**{res.value_rate}**]/min")
             with st.expander(
                 f"### Power :yellow[**{res.power_total + baseline}**]W "
