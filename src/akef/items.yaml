@@ -45,11 +45,13 @@ items:
   #    resource_name: resource_amount
   #    seconds: (defaults to 2)
   #    quantity: (defaults to 1)
-  anyplant:
+  buckflower:
+    plantloop: {}
+  sandleaf:
     plantloop: {}
   carbon:
     refine:
-      anyplant: 1
+      sandleaf: 1
       seconds: 1
   origocrust:
     refine:
@@ -62,7 +64,7 @@ items:
       ferrium_ore: 1
   stabilized_carbon:
     refine:
-      carbon: 1
+      dense_carbon_powder: 1
   packed_origocrust:
     refine:
       dense_origocrust_powder: 1
@@ -90,7 +92,7 @@ items:
       ferrium_ore: 1
   sandleaf_powder:
     shred:
-      anyplant: 1
+      sandleaf: 1
       quantity: 3
   ground_buckflower_powder:
     grind:
@@ -179,7 +181,7 @@ items:
     value: 70
   buckflower_powder:
     shred:
-      anyplant: 1
+      buckflower: 1
       seconds: 2
       quantity: 2
   buck_capsule_c:
