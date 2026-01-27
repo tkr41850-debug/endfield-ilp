@@ -242,18 +242,22 @@ items:
     fill:
       ferrium_bottle: 1
       clean_water: 1
+    icon: https://endfield.wiki.gg/images/thumb/Ferrium_Bottle.png/72px-Ferrium_Bottle.png
   ferrium_bottle_jincao:
     fill:
       ferrium_bottle: 1
       jincao_solution: 1
+    icon: https://endfield.wiki.gg/images/thumb/Ferrium_Bottle.png/72px-Ferrium_Bottle.png
   ferrium_bottle_yazhen:
     fill:
       ferrium_bottle: 1
       yazhen: 1
+    icon: https://endfield.wiki.gg/images/thumb/Ferrium_Bottle.png/72px-Ferrium_Bottle.png
   ferrium_bottle_xiranite:
     fill:
       ferrium_bottle: 1
       liquid_xiranite: 1
+    icon: https://endfield.wiki.gg/images/thumb/Ferrium_Bottle.png/72px-Ferrium_Bottle.png
   # MARK: USABLE ITEMS
   buckflower_powder:
     shred:
