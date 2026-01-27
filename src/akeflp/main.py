@@ -17,7 +17,10 @@ def render(item: Item, rate: float, depth: int = 0) -> None:
         + (f"[{item.value}]" if item.value else "")
     )
 
-    with st.expander(rateinfo):
+    left, right = st.columns([2, 20])
+    if item.icon:
+        left.image(item.icon, width=36)
+    with right.expander(rateinfo):
         if item.inputs:
             st.write(f"to {item.action} costs {item.action_overhead}")
             for amt, pitem in item.inputs:
@@ -90,8 +93,17 @@ def main() -> None:
         "If you want a non-sellable item, put how much you think it is worth "
         "for the optimizer.",
     ):
+
+        def quantity_of_item(x: Item) -> int:
+            left, right = st.columns([3, 20])
+            if x.icon:
+                left.write("")
+                left.write("")
+                left.image(x.icon)
+            return right.number_input(f"![]({x.icon}) {x.name}", step=1, value=x.value)
+
         vals = {
-            k: st.number_input(f"![]({v.icon}) {k}", step=1, value=v.value)
+            k: quantity_of_item(v)
             for k, v in sorted(items.items(), key=lambda x: x[1].name)
             if k not in raw_resources
         }
