@@ -26,8 +26,11 @@ with open(Path(__file__).resolve().parent / "items.yaml", "r") as file:
     items: dict[str, Item] = {}
 
     for k in raw_resources:
-        items[k] = Item(k, 60, ResourceCost.from_dict({k: 1}), [], 1)
-        # kinda fake values to make it calculate properly
+        items[k] = Item(
+            k, 2, ResourceCost.from_dict({k: 30}), [], "mine", output=1, icon=to_wiki(k)
+        )
+    # kinda fake values to make it calculate properly
+    # an instance of a raw_resource represents one full belt of the item
 
     def dfs(k: str) -> None:
         if k in raw_resources or k in items:
