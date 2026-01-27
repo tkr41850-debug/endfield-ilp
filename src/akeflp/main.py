@@ -48,9 +48,11 @@ def main() -> None:
     depot_size = st.number_input("Depot Size", step=1000, min_value=8000)
     checkin_interval_days = st.select_slider(
         "Check-in interval",
-        [1 / 24, 1 / 12, 0.125, 0.25, 0.5, 1, 2, 3, 4, 5, 6, 7],
-        1,
-        lambda x: (f"{x} day" if x >= 1 else f"{round(x * 24)} hour")
+        help="How frequently will you sell items? This is used to determine "
+        "what the max output rate of any item should be to prevent waste.",
+        options=[1 / 24, 1 / 12, 0.125, 0.25, 0.5, 1, 2, 3, 4, 5, 6, 7],
+        value=1,
+        format_func=lambda x: (f"{x} day" if x >= 1 else f"{round(x * 24)} hour")
         + f" ({round(depot_size // (60 * 24 * x))}/min)",
     )
     max_rate = round(depot_size // (60 * 24 * checkin_interval_days))
@@ -63,7 +65,13 @@ def main() -> None:
             "originium_ore": ci1.number_input("Originium ore/min", step=1, min_value=0),
             "amethyst_ore": ci1.number_input("Amethyst ore/min", step=1, min_value=0),
             "ferrium_ore": ci1.number_input("Ferrium ore/min", step=1, min_value=0),
-            "power": ci2.number_input("PAC Power", step=1, min_value=200)
+            "power": ci2.number_input(
+                "PAC Power",
+                help="Base power supplied by the main PAC. "
+                "You probably don't have to change this.",
+                step=1,
+                min_value=200,
+            )
             - (
                 baseline := ci2.number_input(
                     "Base load",
@@ -75,7 +83,13 @@ def main() -> None:
             ),
         }
     )
-    with c1.popover("Objective function"):
+    with c1.popover(
+        "Objective function",
+        help="Configure the 'value' of each item here. "
+        "If you set an item to zero, the item won't be created for value. "
+        "If you want a non-sellable item, put how much you think it is worth "
+        "for the optimizer.",
+    ):
         vals = {
             k: st.number_input(f"![]({v.icon}) {k}", step=1, value=v.value)
             for k, v in sorted(items.items(), key=lambda x: x[1].name)
@@ -95,6 +109,12 @@ def main() -> None:
             + f"({res.power_required}req + {baseline}base)",
             expanded=True,
         ):
+            st.caption(
+                "Running at a time means how many thermal banks are currently "
+                "used that as a fuel source. The power plan is tuned to "
+                "minimize resources used to power the base, as those can be used "
+                "to make other items."
+            )
             for k, vp in res.power.items():
                 st.write(
                     f"**{k}**: {vp.x} at a time",
