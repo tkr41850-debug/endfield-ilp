@@ -131,10 +131,10 @@ items:
       origocrust: 1
   amethyst_powder:
     shred:
-      amethyst_ore: 1
+      amethyst_fiber: 1
   ferrium_powder:
     shred:
-      ferrium_ore: 1
+      ferrium: 1
   sandleaf_powder:
     shred:
       sandleaf: 1
