@@ -34,9 +34,20 @@ class SolveResult(NamedTuple):
     value_rate: int
 
 
+class TaskDetail(NamedTuple):
+    value: int
+    """value per item"""
+
+    lower_bound: int
+    """minimum instances of this"""
+
+    upper_bound: int
+    """maximum instances of this"""
+
+
 def solve(
     constraints: ResourceCost,
-    tasks: dict[str, int],
+    tasks: dict[str, TaskDetail],
     max_rate: int = 8000 // (60 * 24),
     disallowed_taints: list[str] = [],
 ) -> SolveResult:
@@ -48,23 +59,27 @@ def solve(
     N = len(xlabels)
 
     # what will you use for power? in terms of how many units are active?
-    # originium_ore is in multiples of 5,
-    # - every 4 is 0.5/s
     plabels = list(power_sources.keys())
     K = len(plabels)
     c = np.hstack(
         [
+            # note this is a maximization problem so coefficients are inverted
+            # since scipy.optimize.linprog only does minimization problems
             np.asarray(
                 [
                     # using it as power!!
-                    (tasks[k] * power_sources[k].consumption_rate if k in tasks else 0)
+                    (
+                        tasks[k].value * power_sources[k].consumption_rate
+                        if k in tasks
+                        else 0
+                    )
                     for k in plabels
                 ]
             ),
             np.asarray(
                 [
                     # value per minute, per instance
-                    -(tasks[i] * items[i].output_rate if i in tasks else 0)
+                    -(tasks[i].value * items[i].output_rate if i in tasks else 0)
                     for i in xlabels
                 ]
             ),
@@ -119,7 +134,14 @@ def solve(
     b_ub = np.asarray(b)
     bounds: Sequence[Tuple[Optional[int], Optional[int]]] = [
         (0, None) for _ in range(K)
-    ] + [(0, None) for _ in range(N)]
+    ] + [
+        (
+            (tasks[xlabels[i]].lower_bound, tasks[xlabels[i]].upper_bound)
+            if xlabels[i] in tasks
+            else (0, None)
+        )
+        for i in range(N)
+    ]
 
     # ban items that have disallowed_taints
     for i, xlabel in enumerate(xlabels):
@@ -127,7 +149,7 @@ def solve(
             if bad in items[xlabel].taints:
                 cast(MutableSequence, bounds)[i + K] = (0, 0)
 
-    # print(xlabels, plabels)
+    # print(plabels, xlabels)
     # print(A_ub, b_ub)
 
     res = linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=bounds, integrality=1)
@@ -150,6 +172,7 @@ def solve(
                 opportunity_cost=round(res.x[i]) * c[i],
             )
             for i, k in enumerate(plabels)
+            if res.x[i] > 0
         },
         produce={
             k: TaskWithValue(
@@ -168,15 +191,19 @@ def solve(
 # b_ub: Unknown | None = None,
 
 if __name__ == "__main__":
+    # smoke test for infinite power, make sure solver finds basic solution
+    # constrained by upper_bound (if unbounded, origocrust 18-belts)
     res = solve(
-        ResourceCost.from_dict({"power": 200, "originium_ore": 200}),
-        {
-            "ferrium": 5,
-            "steel": 15,
-            "originium_ore": 1,
-            "lc_valley_battery": 1,
-            "sc_valley_battery": 1,
-            "hc_valley_battery": 1,
+        constraints=ResourceCost.from_dict({"power": 1000, "originium_ore": 540}),
+        tasks={
+            # "ferrium": TaskDetail(value=5, lower_bound=0, upper_bound=100),
+            # "ferrium_part": TaskDetail(value=15, lower_bound=0, upper_bound=100),
+            # "originium_ore": TaskDetail(value=1, lower_bound=0, upper_bound=100),
+            "origocrust": TaskDetail(value=10, lower_bound=0, upper_bound=10),
+            # "lc_valley_battery": TaskDetail(value=1, lower_bound=0, upper_bound=100),
+            # "sc_valley_battery": TaskDetail(value=1, lower_bound=0, upper_bound=100),
+            # "hc_valley_battery": TaskDetail(value=1, lower_bound=0, upper_bound=100),
         },
+        max_rate=100000,
     )
     print(res)

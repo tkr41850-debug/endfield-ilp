@@ -3,7 +3,7 @@ import math
 import streamlit as st
 
 from akef.items import Item, ResourceCost, items, power_sources, raw_resources
-from akeflp.solver import POWER, solve
+from akeflp.solver import POWER, TaskDetail, solve
 
 
 def render(item: Item, rate: float, depth: int = 0) -> None:
@@ -94,13 +94,19 @@ def main() -> None:
         "for the optimizer.",
     ):
 
-        def quantity_of_item(x: Item) -> int:
+        def quantity_of_item(x: Item) -> TaskDetail:
             left, right = st.columns([3, 20])
             if x.icon:
                 left.write("")
                 left.write("")
                 left.image(x.icon)
-            return right.number_input(f"![]({x.icon}) {x.name}", step=1, value=x.value)
+            return TaskDetail(
+                value=right.number_input(
+                    f"![]({x.icon}) {x.name}", step=1, value=x.value
+                ),
+                lower_bound=0,
+                upper_bound=10000,
+            )
 
         vals = {
             k: quantity_of_item(v)
