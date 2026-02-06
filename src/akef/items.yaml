@@ -3,6 +3,7 @@ raw_resources:
   - originium_ore
   - amethyst_ore
   - ferrium_ore
+  - forge_of_the_sky
 power:
   originium_ore:
     power: 50
@@ -116,6 +117,7 @@ items:
     skyforge:
       stabilized_carbon: 2
       clean_water: 1
+      forge_of_the_sky: 1
     value: 1
     taints:
       - wuling

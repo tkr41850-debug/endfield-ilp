@@ -68,6 +68,18 @@ def main() -> None:
             "originium_ore": ci1.number_input("Originium ore/min", step=1, min_value=0),
             "amethyst_ore": ci1.number_input("Amethyst ore/min", step=1, min_value=0),
             "ferrium_ore": ci1.number_input("Ferrium ore/min", step=1, min_value=0),
+            "forge_of_the_sky": (
+                ci1.number_input(
+                    "Forges of the Sky",
+                    step=1,
+                    min_value=0,
+                    max_value=4,
+                    value=2,
+                )
+                if allow_wuling
+                else 0
+            )
+            * 30,
             "power": ci2.number_input(
                 "PAC Power",
                 help="Base power supplied by the main PAC. "
