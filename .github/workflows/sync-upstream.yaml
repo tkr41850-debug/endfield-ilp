@@ -23,5 +23,5 @@ jobs:
           git fetch upstream
           git config --global user.email "github-actions-bot@example.org"
           git config --global user.name "github-actions[bot]"
-          git merge upstream/main --no-edit --allow-unrelated-histories
+          git merge -s ort upstream/main --no-edit --allow-unrelated-histories
           git push
