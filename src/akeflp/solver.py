@@ -1,3 +1,11 @@
+"""
+Resource Plan Solver
+
+Maximize profit with a valid production and power plan
+(non negative net raw resources and non negative net power)
+given resource income.
+"""
+
 from typing import MutableSequence, NamedTuple, Optional, Sequence, Tuple, cast
 
 import numpy as np

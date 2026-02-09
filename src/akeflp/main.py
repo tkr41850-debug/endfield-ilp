@@ -1,3 +1,7 @@
+"""
+Streamlit interface for Resource Plan Solver
+"""
+
 import math
 
 import streamlit as st
