@@ -21,5 +21,5 @@ jobs:
           # https://stackoverflow.com/a/14243407
           git remote add upstream https://github.com/NovaSagittarii/endfield-ilp.git
           git fetch upstream
-          git merge upstream/main --no-edit
+          git merge upstream/main --no-edit --allow-unrelated-histories
       - uses: stefanzweifel/git-auto-commit-action@v7
