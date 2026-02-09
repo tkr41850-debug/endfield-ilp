@@ -1,0 +1,25 @@
+name: Sync with Upstream
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * 1,4"
+    # scheduled at 07:00 every Monday and Thursday
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref }}
+          persist-credentials: true
+      - name: Sync with upstream
+        run: |
+          # https://stackoverflow.com/a/14243407
+          git remote add upstream https://github.com/NovaSagittarii/endfield-ilp.git
+          git fetch upstream
+          git merge upstream/main
+      - uses: stefanzweifel/git-auto-commit-action@v7
